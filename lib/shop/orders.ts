@@ -51,10 +51,10 @@ export async function saveOrder(cart: CartItem[], customer: CustomerInfo): Promi
 
 export function buildWhatsAppText(cart: CartItem[], customer: CustomerInfo, orderNumber: number): string {
   const lines: string[] = [];
-  lines.push(`🧾 *NUEVO PEDIDO AMAZ COFFEE #${orderNumber}*`, '');
-  lines.push(`👤 *Cliente:* ${customer.name.trim()}`);
-  lines.push(`📞 *WhatsApp:* ${customer.phone.trim()}`, '');
-  lines.push('🛒 *Pedido:*');
+  lines.push(`*NUEVO PEDIDO AMAZ COFFEE #${orderNumber}*`, '');
+  lines.push(`*Cliente:* ${customer.name.trim()}`);
+  lines.push(`*WhatsApp:* ${customer.phone.trim()}`, '');
+  lines.push('*Pedido:*');
   for (const item of cart) {
     const size = displaySizeLabel(item.product, item.customization);
     lines.push(
@@ -62,11 +62,11 @@ export function buildWhatsAppText(cart: CartItem[], customer: CustomerInfo, orde
     );
     for (const label of choiceLabels(item.product, item.customization)) lines.push(`   + ${label}`);
   }
-  lines.push('', `💰 *Total:* ${formatPrice(cartSubtotal(cart))}`);
-  lines.push(`📍 *Dirección:* ${customer.address.trim()}`);
+  lines.push('', `*Total:* ${formatPrice(cartSubtotal(cart))}`);
+  lines.push(`*Dirección:* ${customer.address.trim()}`);
   if (customer.reference.trim()) lines.push(`🗺️ *Referencia:* ${customer.reference.trim()}`);
-  lines.push(`💳 *Pago:* ${PAYMENT_LABELS[customer.paymentMethod]}`, '');
-  lines.push('¡Hola! Quisiera confirmar mi pedido 😊');
+  lines.push(`*Pago:* ${PAYMENT_LABELS[customer.paymentMethod]}`, '');
+  lines.push('¡Hola! Quisiera confirmar mi pedido');
   return lines.join('\n');
 }
 
