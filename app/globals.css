@@ -21,6 +21,36 @@
 
 @theme inline {
   --font-sans: 'DM Sans', Arial, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+}
+
+/* Paleta de la web de pedidos (misma que AppColors del kiosko Flutter) */
+@theme {
+  --color-amaz-green: #1B3A2D;
+  --color-amaz-green-mid: #1F4233;
+  --color-amaz-deep: #122618;
+  --color-amaz-deeper: #0C1C12;
+  --color-amaz-cream: #F5EDD8;
+  --color-amaz-cream-light: #FBF8EF;
+  --color-amaz-border: #E6DCC0;
+  --color-amaz-border-light: #ECE2C6;
+  --color-amaz-gold: #C9A24B;
+  --color-amaz-gold-dark: #14271E;
+  --color-amaz-gold-muted: #8A7C52;
+  --color-amaz-ink: #243029;
+  --color-amaz-sub: #5C5746;
+  --color-amaz-muted: #9A8E6A;
+  --color-amaz-on-dark: #CDD8CF;
+  --color-amaz-error: #A23B2F;
+  --color-whatsapp: #25D366;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
 }
 
 * {

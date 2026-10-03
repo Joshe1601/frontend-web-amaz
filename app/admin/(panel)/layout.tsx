@@ -8,11 +8,11 @@ import { useAuth } from '@/lib/auth-context';
 import { PeriodProvider, usePeriod, toInputDate, Period } from '@/lib/period-context';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: <GridIcon /> },
-  { href: '/ventas', label: 'Ventas', icon: <ChartIcon /> },
-  { href: '/ingredientes', label: 'Inventario', icon: <BoxIcon /> },
-  { href: '/menu', label: 'Productos', icon: <CoffeeIcon /> },
-  { href: '/reportes', label: 'Reportes', icon: <DocIcon /> },
+  { href: '/admin/dashboard', label: 'Dashboard', icon: <GridIcon /> },
+  { href: '/admin/ventas', label: 'Ventas', icon: <ChartIcon /> },
+  { href: '/admin/ingredientes', label: 'Inventario', icon: <BoxIcon /> },
+  { href: '/admin/productos', label: 'Productos', icon: <CoffeeIcon /> },
+  { href: '/admin/reportes', label: 'Reportes', icon: <DocIcon /> },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -32,7 +32,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && (!user || role !== 'admin')) {
-      router.replace('/');
+      router.replace('/admin/login');
     }
   }, [user, role, loading, router]);
 
@@ -82,7 +82,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
           }}
         >
           {/* Logo */}
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
+          <Link href="/admin/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{ position: 'relative', width: 40, height: 40 }}>
               <Image src="/logo-main-amaz.png" alt="AMAZ Coffee" fill className="object-contain" priority />
             </div>
@@ -199,7 +199,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                   </p>
                 </div>
                 <button
-                  onClick={async () => { setMenuOpen(false); await signOut(); router.replace('/'); }}
+                  onClick={async () => { setMenuOpen(false); await signOut(); router.replace('/admin/login'); }}
                   style={{
                     width: '100%',
                     padding: '11px 16px',

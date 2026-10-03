@@ -354,7 +354,7 @@ export default function DashboardPage() {
                 {orders.length > 8 && (
                   <div style={{ marginTop: 12, textAlign: 'center' }}>
                     <button
-                      onClick={() => router.push('/pedidos')}
+                      onClick={() => router.push('/admin/pedidos')}
                       style={{
                         padding: '8px 20px',
                         border: '1.5px solid var(--border)',

@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!loading && user && role === 'admin') {
-      router.replace('/dashboard');
+      router.replace('/admin/dashboard');
     }
   }, [user, role, loading, router]);
 
@@ -62,7 +62,7 @@ export default function LoginPage() {
         setError(`Esta cuenta tiene rol "${userRole ?? 'sin rol'}", no "admin". Sin acceso al panel.`);
         return;
       }
-      router.replace('/dashboard');
+      router.replace('/admin/dashboard');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? '';
       console.error('[Login] Firestore error:', code, err);
