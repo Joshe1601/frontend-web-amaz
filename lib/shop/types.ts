@@ -53,7 +53,7 @@ export type PaymentMethod = 'yape' | 'efectivo';
 
 export interface CustomerInfo {
   name: string;
-  phone: string;
+  zone: string; // id de DELIVERY_ZONES ('' = sin elegir)
   address: string;
   reference: string;
   paymentMethod: PaymentMethod;

@@ -1,6 +1,7 @@
 import { doc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cartSubtotal, choiceLabels, displaySizeLabel, formatPrice, lineTotal, summary, unitPrice } from './pricing';
+import { findZone } from './delivery';
 import type { CartItem, CustomerInfo, PaymentMethod } from './types';
 
 export const WHATSAPP_NUMBER = '51922558601';
@@ -52,8 +53,7 @@ export async function saveOrder(cart: CartItem[], customer: CustomerInfo): Promi
 export function buildWhatsAppText(cart: CartItem[], customer: CustomerInfo, orderNumber: number): string {
   const lines: string[] = [];
   lines.push(`*NUEVO PEDIDO AMAZ COFFEE #${orderNumber}*`, '');
-  lines.push(`*Cliente:* ${customer.name.trim()}`);
-  lines.push(`*WhatsApp:* ${customer.phone.trim()}`, '');
+  lines.push(`*Cliente:* ${customer.name.trim()}`, '');
   lines.push('*Pedido:*');
   for (const item of cart) {
     const size = displaySizeLabel(item.product, item.customization);
@@ -62,7 +62,12 @@ export function buildWhatsAppText(cart: CartItem[], customer: CustomerInfo, orde
     );
     for (const label of choiceLabels(item.product, item.customization)) lines.push(`   + ${label}`);
   }
-  lines.push('', `*Total:* ${formatPrice(cartSubtotal(cart))}`);
+  const zone = findZone(customer.zone);
+  const subtotal = cartSubtotal(cart);
+  lines.push('', `*Subtotal:* ${formatPrice(subtotal)}`);
+  if (zone) lines.push(`*Delivery (${zone.label}):* ${formatPrice(zone.fee)}`);
+  lines.push(`*Total:* ${formatPrice(subtotal + (zone?.fee ?? 0))}`, '');
+  lines.push(`*Zona:* ${zone?.label ?? '—'}`);
   lines.push(`*Dirección:* ${customer.address.trim()}`);
   if (customer.reference.trim()) lines.push(`🗺️ *Referencia:* ${customer.reference.trim()}`);
   lines.push(`*Pago:* ${PAYMENT_LABELS[customer.paymentMethod]}`, '');

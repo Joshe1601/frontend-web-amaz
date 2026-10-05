@@ -7,6 +7,7 @@ import { shopActions, useHydrated, useShop } from '@/lib/shop/cart-store';
 import { PAYMENT_LABELS, buildWhatsAppText, saveOrder, whatsAppLink } from '@/lib/shop/orders';
 import { cartSubtotal, choiceLabels, displaySizeLabel, formatPrice, lineTotal } from '@/lib/shop/pricing';
 import { validateCustomer } from '@/lib/shop/validation';
+import { findZone } from '@/lib/shop/delivery';
 import type { CartItem, CustomerInfo, SentOrder } from '@/lib/shop/types';
 import StepHeader from '@/components/shop/StepHeader';
 import { CheckIcon, WhatsAppIcon } from '@/components/shop/icons';
@@ -46,7 +47,11 @@ export default function ConfirmarPage() {
 function ConfirmView({ cart, customer }: { cart: CartItem[]; customer: CustomerInfo }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const total = cartSubtotal(cart);
+  const subtotal = cartSubtotal(cart);
+  const zone = findZone(customer.zone);
+  const deliveryFee = zone?.fee ?? 0;
+  // Total a pagar por el cliente. En Firestore se guarda solo el subtotal de productos.
+  const total = subtotal + deliveryFee;
 
   // Guarda en Firestore (mismo flujo que el kiosko) y recién entonces abre WhatsApp.
   async function send() {
@@ -92,7 +97,17 @@ function ConfirmView({ cart, customer }: { cart: CartItem[]; customer: CustomerI
             );
           })}
         </ul>
-        <div className="mt-3 flex justify-between border-t border-amaz-border pt-4 text-xl font-bold text-amaz-ink">
+        <div className="mt-3 flex flex-col gap-1.5 border-t border-amaz-border pt-4 text-[15px] text-amaz-sub">
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Delivery{zone && ` (${zone.label})`}</span>
+            <span>{formatPrice(deliveryFee)}</span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-between border-t border-amaz-border-light pt-3 text-xl font-bold text-amaz-ink">
           <span>Total</span>
           <span>{formatPrice(total)}</span>
         </div>
@@ -108,8 +123,8 @@ function ConfirmView({ cart, customer }: { cart: CartItem[]; customer: CustomerI
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[14px]">
           <dt className="text-amaz-muted">Cliente</dt>
           <dd className="text-amaz-ink">{customer.name}</dd>
-          <dt className="text-amaz-muted">WhatsApp</dt>
-          <dd className="text-amaz-ink">{customer.phone}</dd>
+          <dt className="text-amaz-muted">Zona</dt>
+          <dd className="text-amaz-ink">{zone?.label}</dd>
           <dt className="text-amaz-muted">Dirección</dt>
           <dd className="text-amaz-ink">{customer.address}</dd>
           {customer.reference.trim() && (

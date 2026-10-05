@@ -16,7 +16,7 @@ const STORAGE_KEY = 'amaz-shop-v1';
 
 export const EMPTY_CUSTOMER: CustomerInfo = {
   name: '',
-  phone: '',
+  zone: '',
   address: '',
   reference: '',
   paymentMethod: 'yape',
@@ -28,6 +28,15 @@ let state: ShopState = INITIAL;
 let loaded = false;
 const listeners = new Set<() => void>();
 
+// Solo conserva los campos actuales (descarta campos antiguos como `phone`).
+function pickCustomer(saved: Partial<CustomerInfo> | undefined): CustomerInfo {
+  const out = { ...EMPTY_CUSTOMER };
+  for (const k of Object.keys(EMPTY_CUSTOMER) as (keyof CustomerInfo)[]) {
+    if (typeof saved?.[k] === 'string') (out as Record<string, string>)[k] = saved[k] as string;
+  }
+  return out;
+}
+
 function load() {
   if (loaded || typeof window === 'undefined') return;
   loaded = true;
@@ -37,7 +46,7 @@ function load() {
       const parsed = JSON.parse(raw) as Partial<ShopState>;
       state = {
         cart: Array.isArray(parsed.cart) ? parsed.cart : [],
-        customer: { ...EMPTY_CUSTOMER, ...parsed.customer },
+        customer: pickCustomer(parsed.customer),
         lastOrder: parsed.lastOrder ?? null,
       };
     }

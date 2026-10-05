@@ -7,8 +7,10 @@ import { shopActions, useHydrated, useShop } from '@/lib/shop/cart-store';
 import { PAYMENT_LABELS } from '@/lib/shop/orders';
 import type { CustomerInfo, PaymentMethod } from '@/lib/shop/types';
 import { type CustomerErrors, validateCustomer } from '@/lib/shop/validation';
+import { DELIVERY_ZONES } from '@/lib/shop/delivery';
+import { formatPrice } from '@/lib/shop/pricing';
 import StepHeader from '@/components/shop/StepHeader';
-import { ArrowRightIcon } from '@/components/shop/icons';
+import { ArrowRightIcon, ChevronDownIcon } from '@/components/shop/icons';
 
 type Errors = CustomerErrors;
 
@@ -71,17 +73,28 @@ export default function DatosPage() {
             className={inputClass(!!errors.name)}
           />
         </Field>
-        <Field id="phone" label="Número de WhatsApp" error={errors.phone}>
-          <input
-            id="f-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            value={customer.phone}
-            onChange={(e) => update({ phone: e.target.value })}
-            placeholder="Ej. 922 558 601"
-            className={inputClass(!!errors.phone)}
-          />
+        <Field id="zone" label="Zona de delivery" error={errors.zone}>
+          <div className="relative">
+            <select
+              id="f-zone"
+              value={customer.zone}
+              onChange={(e) => update({ zone: e.target.value })}
+              className={`${inputClass(!!errors.zone)} appearance-none pr-11 ${customer.zone ? '' : 'text-amaz-muted/70'}`}
+            >
+              <option value="" disabled>
+                Elige tu distrito
+              </option>
+              {DELIVERY_ZONES.map((z) => (
+                <option key={z.id} value={z.id} className="text-amaz-ink">
+                  {z.label} — {formatPrice(z.fee)}
+                </option>
+              ))}
+            </select>
+            <ChevronDownIcon
+              size={20}
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-amaz-green"
+            />
+          </div>
         </Field>
         <Field id="address" label="Dirección de entrega" error={errors.address}>
           <input
